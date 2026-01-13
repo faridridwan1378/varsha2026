@@ -899,6 +899,59 @@ body {
     content: '🔐 ';
 }
 
+/* Checkout Buttons Container */
+.checkout-buttons {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.btn-checkout-secondary {
+    flex: 1;
+    padding: var(--spacing-md);
+    background: var(--color-gray-200);
+    color: var(--color-gray-700);
+    border: none;
+    border-radius: var(--radius-lg);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    cursor: pointer;
+    min-height: 52px;
+    transition: var(--transition-fast);
+}
+
+.btn-checkout-secondary:active {
+    transform: scale(0.98);
+    background: var(--color-gray-300);
+}
+
+.btn-checkout-wa {
+    flex: 1.5;
+    padding: var(--spacing-md);
+    background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    min-height: 52px;
+    transition: var(--transition-fast);
+}
+
+.btn-checkout-wa:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+}
+
+.btn-checkout-wa svg {
+    width: 18px;
+    height: 18px;
+}
+
 /* ==================== EMPTY STATE ==================== */
 .empty-state {
     display: flex;
