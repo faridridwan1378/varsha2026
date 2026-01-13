@@ -3694,7 +3694,14 @@ async function downloadAllFromFirebase() {
             Store.admins = adminsDoc.data().items;
             localStorage.setItem('varsha_admins', JSON.stringify(Store.admins));
         }
-        
+
+        // Download referral codes
+        const referralCodesDoc = await getDoc(doc(FirebaseState.db, 'store', 'referralCodes'));
+        if (referralCodesDoc.exists() && referralCodesDoc.data().items) {
+            Store.referralCodes = referralCodesDoc.data().items;
+            localStorage.setItem('varsha_referral_codes', JSON.stringify(Store.referralCodes));
+        }
+
         console.log('📥 All data downloaded from Firebase');
         return true;
     } catch (error) {
@@ -3775,7 +3782,20 @@ function setupRealtimeListeners() {
         }
     });
     FirebaseState.unsubscribers.push(unsubCustomers);
-    
+
+    // Listen to referral codes changes
+    const unsubReferralCodes = onSnapshot(doc(FirebaseState.db, 'store', 'referralCodes'), (docSnap) => {
+        if (docSnap.exists() && docSnap.data().items) {
+            const newReferralCodes = docSnap.data().items;
+            if (JSON.stringify(newReferralCodes) !== JSON.stringify(Store.referralCodes)) {
+                Store.referralCodes = newReferralCodes;
+                localStorage.setItem('varsha_referral_codes', JSON.stringify(Store.referralCodes));
+                console.log('🔄 Referral codes updated from cloud');
+            }
+        }
+    });
+    FirebaseState.unsubscribers.push(unsubReferralCodes);
+
     console.log('👂 Realtime listeners active');
 }
 
@@ -3801,6 +3821,9 @@ async function syncToFirebase(dataType) {
                 break;
             case 'admins':
                 await setDoc(doc(FirebaseState.db, 'store', 'admins'), { items: Store.admins, updatedAt: new Date().toISOString() });
+                break;
+            case 'referralCodes':
+                await setDoc(doc(FirebaseState.db, 'store', 'referralCodes'), { items: Store.referralCodes, updatedAt: new Date().toISOString() });
                 break;
         }
         console.log(`☁️ ${dataType} synced to Firebase`);
