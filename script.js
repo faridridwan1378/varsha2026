@@ -431,16 +431,22 @@ function renderCart() {
     }
     
     // Update tombol checkout berdasarkan status login
-    const checkoutBtn = document.getElementById('btn-checkout-main');
+    const checkoutBtn = document.getElementById('btn-checkout-wa');
     const checkoutBtnText = document.getElementById('checkout-btn-text');
-    if (checkoutBtn && checkoutBtnText) {
-        if (State.loggedInUser) {
-            checkoutBtnText.textContent = 'Pesan via WhatsApp';
+    
+    if (State.loggedInUser) {
+        // User sudah login - tombol aktif
+        if (checkoutBtn) {
             checkoutBtn.classList.remove('btn-checkout-disabled');
-        } else {
-            checkoutBtnText.textContent = 'Login untuk Checkout';
+            checkoutBtn.disabled = false;
+        }
+        if (checkoutBtnText) checkoutBtnText.textContent = 'Pesan via WhatsApp';
+    } else {
+        // User belum login - tombol disabled
+        if (checkoutBtn) {
             checkoutBtn.classList.add('btn-checkout-disabled');
         }
+        if (checkoutBtnText) checkoutBtnText.textContent = '🔐 Login untuk Checkout';
     }
     
     // Render items
@@ -1108,7 +1114,7 @@ function showToast(message, type = 'info') {
         toast.style.opacity = '0';
         toast.style.transform = 'translateY(-20px)';
         setTimeout(() => toast.remove(), 300);
-    }, 2500);
+    }, 1000);
 }
 
 // ==================== ORDERS MANAGEMENT ====================
@@ -2980,7 +2986,8 @@ function processCheckout(event) {
     
     // Build WhatsApp message
     let message = `🛒 *PESANAN BARU*\n`;
-    message += `*${Store.profile.name}*\n\n`;
+    message += `Halo *${Store.profile.name}* ${Store.profile.logo}\n\n`;
+    message += `Saya ingin memesan:\n\n`;
     message += `📝 *No. Pesanan: ${orderId}*\n\n`;
     message += `👤 *Data Penerima:*\n`;
     message += `Nama: ${name}\n`;
@@ -3001,18 +3008,15 @@ function processCheckout(event) {
     });
     
     message += `─────────────\n`;
-    message += `💰 *TOTAL: Rp ${formatNumber(total)}*\n\n`;
-    
-    if (Store.profile.bank && Store.profile.accountNumber) {
-        message += `💳 *Transfer ke:*\n`;
-        message += `${Store.profile.bank} - ${Store.profile.accountNumber}\n`;
-        message += `a.n ${Store.profile.accountName}\n\n`;
-    }
-    
-    message += `Terima kasih! ${Store.profile.logo}`;
+    message += `💰 *SUBTOTAL: Rp ${formatNumber(total)}*\n`;
+    message += `🚚 *Ongkir: Menunggu konfirmasi*\n\n`;
+    message += `📍 Mohon konfirmasi biaya pengirimannya ke alamat saya.\n\n`;
+    message += `Terima kasih! 🙏`;
     
     const waUrl = `https://wa.me/62${Store.profile.whatsapp}?text=${encodeURIComponent(message)}`;
     window.open(waUrl, '_blank');
+    
+    showToast('Pesanan berhasil dibuat!', 'success');
     
     // Clear cart after checkout
     Store.cart = [];
@@ -3021,7 +3025,6 @@ function processCheckout(event) {
     renderCart();
     
     closeModal('modal-checkout');
-    showToast('Pesanan berhasil dibuat!', 'success');
 }
 
 // ==================== ADMIN AUTHENTICATION ====================
@@ -3694,14 +3697,14 @@ async function downloadAllFromFirebase() {
             Store.admins = adminsDoc.data().items;
             localStorage.setItem('varsha_admins', JSON.stringify(Store.admins));
         }
-
+        
         // Download referral codes
         const referralCodesDoc = await getDoc(doc(FirebaseState.db, 'store', 'referralCodes'));
         if (referralCodesDoc.exists() && referralCodesDoc.data().items) {
             Store.referralCodes = referralCodesDoc.data().items;
             localStorage.setItem('varsha_referral_codes', JSON.stringify(Store.referralCodes));
         }
-
+        
         console.log('📥 All data downloaded from Firebase');
         return true;
     } catch (error) {
@@ -3782,7 +3785,7 @@ function setupRealtimeListeners() {
         }
     });
     FirebaseState.unsubscribers.push(unsubCustomers);
-
+    
     // Listen to referral codes changes
     const unsubReferralCodes = onSnapshot(doc(FirebaseState.db, 'store', 'referralCodes'), (docSnap) => {
         if (docSnap.exists() && docSnap.data().items) {
@@ -3795,7 +3798,7 @@ function setupRealtimeListeners() {
         }
     });
     FirebaseState.unsubscribers.push(unsubReferralCodes);
-
+    
     console.log('👂 Realtime listeners active');
 }
 
@@ -3842,6 +3845,7 @@ saveToStorage = function() {
     localStorage.setItem('varsha_orders', JSON.stringify(Store.orders));
     localStorage.setItem('varsha_customers', JSON.stringify(Store.customers));
     localStorage.setItem('varsha_admins', JSON.stringify(Store.admins));
+    localStorage.setItem('varsha_referral_codes', JSON.stringify(Store.referralCodes));
     
     // Sync to Firebase if connected and auto-sync enabled
     if (FirebaseState.connected && FirebaseState.autoSync) {
@@ -3851,6 +3855,7 @@ saveToStorage = function() {
         syncToFirebase('orders');
         syncToFirebase('customers');
         syncToFirebase('admins');
+        syncToFirebase('referralCodes');
     }
 };
 
@@ -4036,6 +4041,7 @@ function updateSyncCounts() {
     document.getElementById('sync-orders-count').textContent = Store.orders.length;
     document.getElementById('sync-customers-count').textContent = Store.customers.length;
     document.getElementById('sync-admins-count').textContent = Store.admins.length;
+    document.getElementById('sync-referral-count').textContent = Store.referralCodes.length;
 }
 
 function switchFirebaseTab(tabName) {
@@ -4126,6 +4132,12 @@ async function uploadToFirebase() {
         if (document.getElementById('sync-admins').checked) {
             await setDoc(doc(FirebaseState.db, 'store', 'admins'), { 
                 items: Store.admins, 
+                updatedAt: new Date().toISOString() 
+            });
+        }
+        if (document.getElementById('sync-referral-codes').checked) {
+            await setDoc(doc(FirebaseState.db, 'store', 'referralCodes'), { 
+                items: Store.referralCodes, 
                 updatedAt: new Date().toISOString() 
             });
         }
