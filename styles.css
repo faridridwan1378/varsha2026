@@ -3804,6 +3804,223 @@ body {
     transform: translateX(24px);
 }
 
+/* Toggle Container */
+.toggle-container {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.toggle-label {
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-700);
+}
+
+/* Banner Icon Picker */
+.banner-icon-picker {
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: flex-start;
+}
+
+.banner-icon-preview {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, var(--color-primary-bg) 0%, #fef9c3 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 2px dashed var(--color-gray-300);
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.banner-icon-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Color Picker */
+.color-picker-row {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+.color-option {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: var(--transition-fast);
+}
+
+.color-option:active {
+    transform: scale(0.95);
+}
+
+.color-option.active {
+    border-color: var(--color-gray-900);
+    box-shadow: 0 0 0 2px white, 0 0 0 4px var(--color-gray-400);
+}
+
+/* Promo Banner Colors */
+.promo-banner.color-green {
+    background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+}
+
+.promo-banner.color-orange {
+    background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+}
+
+.promo-banner.color-blue {
+    background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+}
+
+.promo-banner.color-purple {
+    background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+}
+
+.promo-banner.color-pink {
+    background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+}
+
+.promo-banner.color-red {
+    background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+}
+
+/* ==================== WELCOME PAGE EDITOR ==================== */
+.benefit-editor {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.benefit-edit-item {
+    background: white;
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.benefit-edit-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--color-gray-100);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-gray-700);
+}
+
+.benefit-edit-number {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-primary);
+    color: white;
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+}
+
+.benefit-edit-fields {
+    padding: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.benefit-edit-fields .form-row {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.benefit-edit-fields .form-section {
+    margin-bottom: 0;
+}
+
+.benefit-edit-fields .form-label {
+    font-size: var(--font-size-xs);
+    margin-bottom: 2px;
+}
+
+.benefit-edit-fields .form-input {
+    padding: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+}
+
+/* Welcome Preview */
+.welcome-preview {
+    background: linear-gradient(135deg, var(--color-primary-bg) 0%, #fef9c3 100%);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-lg);
+    text-align: center;
+}
+
+.welcome-preview-icon {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.welcome-preview-title {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--color-gray-900);
+    margin-bottom: var(--spacing-xs);
+}
+
+.welcome-preview-subtitle {
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-600);
+    margin-bottom: var(--spacing-md);
+}
+
+.welcome-preview-benefits {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.welcome-preview-benefit {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    background: white;
+    border-radius: var(--radius-md);
+    text-align: left;
+}
+
+.welcome-preview-benefit-icon {
+    font-size: 1.25rem;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-primary-bg);
+    border-radius: var(--radius-sm);
+}
+
+.welcome-preview-benefit-text h5 {
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    color: var(--color-gray-900);
+}
+
+.welcome-preview-benefit-text p {
+    font-size: 10px;
+    color: var(--color-gray-500);
+}
+
 /* Backup Section */
 .backup-section {
     padding: var(--spacing-lg) 0;
