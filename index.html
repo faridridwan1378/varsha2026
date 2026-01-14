@@ -84,7 +84,7 @@
                 </div>
 
                 <!-- Promo Banner -->
-                <div class="promo-banner">
+                <div id="promo-banner" class="promo-banner color-green">
                     <div class="promo-content">
                         <span class="promo-badge">FRESH</span>
                         <p class="promo-text">Buah segar langsung dari petani! 🌱</p>
@@ -219,12 +219,12 @@
                 <!-- Guest View (Not Logged In) -->
                 <div id="guest-view">
                     <div class="auth-welcome">
-                        <div class="auth-welcome-icon">👋</div>
-                        <h2 class="auth-welcome-title">Selamat Datang!</h2>
-                        <p class="auth-welcome-text">Masuk atau daftar untuk menikmati kemudahan berbelanja</p>
+                        <div id="welcome-display-icon" class="auth-welcome-icon">👋</div>
+                        <h2 id="welcome-display-title" class="auth-welcome-title">Selamat Datang!</h2>
+                        <p id="welcome-display-subtitle" class="auth-welcome-text">Masuk atau daftar untuk menikmati kemudahan berbelanja</p>
                     </div>
 
-                    <div class="auth-benefits">
+                    <div id="welcome-benefits-display" class="auth-benefits">
                         <div class="benefit-item">
                             <span class="benefit-icon">🚀</span>
                             <div class="benefit-content">
@@ -732,6 +732,185 @@
                         <div class="form-section">
                             <label class="form-label">Link Google Maps</label>
                             <input type="url" id="input-maps" class="form-input" placeholder="https://maps.google.com/...">
+                        </div>
+
+                        <!-- Hero Banner -->
+                        <div class="form-divider">Hero Banner</div>
+                        
+                        <div class="form-section">
+                            <label class="form-label">Status Banner</label>
+                            <div class="toggle-container">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="input-banner-active" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span class="toggle-label">Tampilkan Banner</span>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <label class="form-label">Badge Text</label>
+                            <input type="text" id="input-banner-badge" class="form-input" placeholder="FRESH" maxlength="20">
+                            <p class="form-hint">Text pendek di badge (max 20 karakter)</p>
+                        </div>
+
+                        <div class="form-section">
+                            <label class="form-label">Teks Promo</label>
+                            <input type="text" id="input-banner-text" class="form-input" placeholder="Buah segar langsung dari petani! 🌱">
+                        </div>
+
+                        <div class="form-section">
+                            <label class="form-label">Icon Banner</label>
+                            <div class="banner-icon-picker">
+                                <div id="banner-icon-preview" class="banner-icon-preview" onclick="toggleBannerIconPicker()">
+                                    <span class="text-3xl">🍎</span>
+                                </div>
+                                <div class="flex-1">
+                                    <input type="url" id="input-banner-image" class="form-input" placeholder="URL gambar banner (opsional)">
+                                    <p class="form-hint">Atau pilih emoji dengan tap icon</p>
+                                </div>
+                            </div>
+                            <div id="emoji-picker-banner" class="emoji-picker hidden">
+                                <!-- Rendered by JS -->
+                            </div>
+                            <input type="hidden" id="input-banner-icon" value="🍎">
+                        </div>
+
+                        <div class="form-section">
+                            <label class="form-label">Warna Background</label>
+                            <div class="color-picker-row">
+                                <div class="color-option active" data-color="green" onclick="selectBannerColor('green', this)" style="background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);"></div>
+                                <div class="color-option" data-color="orange" onclick="selectBannerColor('orange', this)" style="background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);"></div>
+                                <div class="color-option" data-color="blue" onclick="selectBannerColor('blue', this)" style="background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);"></div>
+                                <div class="color-option" data-color="purple" onclick="selectBannerColor('purple', this)" style="background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);"></div>
+                                <div class="color-option" data-color="pink" onclick="selectBannerColor('pink', this)" style="background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);"></div>
+                                <div class="color-option" data-color="red" onclick="selectBannerColor('red', this)" style="background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);"></div>
+                            </div>
+                            <input type="hidden" id="input-banner-color" value="green">
+                        </div>
+
+                        <div class="form-section">
+                            <label class="form-label">Preview Banner</label>
+                            <div id="banner-preview" class="promo-banner" style="margin: 0;">
+                                <div class="promo-content">
+                                    <span class="promo-badge">FRESH</span>
+                                    <p class="promo-text">Buah segar langsung dari petani! 🌱</p>
+                                </div>
+                                <span class="promo-icon">🍎</span>
+                            </div>
+                        </div>
+
+                        <!-- Welcome Page Settings -->
+                        <div class="form-divider">Halaman Selamat Datang</div>
+                        
+                        <div class="form-section">
+                            <label class="form-label">Icon Selamat Datang</label>
+                            <div class="banner-icon-picker">
+                                <div id="welcome-icon-preview" class="banner-icon-preview" onclick="toggleWelcomeIconPicker()">
+                                    <span class="text-3xl">👋</span>
+                                </div>
+                                <div class="flex-1">
+                                    <input type="url" id="input-welcome-image" class="form-input" placeholder="URL gambar (opsional)" oninput="updateWelcomeIconPreview()">
+                                    <p class="form-hint">Atau pilih emoji dengan tap icon</p>
+                                </div>
+                            </div>
+                            <div id="emoji-picker-welcome" class="emoji-picker hidden">
+                                <!-- Rendered by JS -->
+                            </div>
+                            <input type="hidden" id="input-welcome-icon" value="👋">
+                        </div>
+
+                        <div class="form-section">
+                            <label class="form-label">Judul Selamat Datang</label>
+                            <input type="text" id="input-welcome-title" class="form-input" placeholder="Selamat Datang!" maxlength="50">
+                        </div>
+
+                        <div class="form-section">
+                            <label class="form-label">Subtitle</label>
+                            <input type="text" id="input-welcome-subtitle" class="form-input" placeholder="Masuk atau daftar untuk menikmati kemudahan berbelanja">
+                        </div>
+
+                        <div class="form-divider">Benefit Items (3 Item)</div>
+
+                        <div class="benefit-editor">
+                            <!-- Benefit 1 -->
+                            <div class="benefit-edit-item">
+                                <div class="benefit-edit-header">
+                                    <span class="benefit-edit-number">1</span>
+                                    <span>Benefit Pertama</span>
+                                </div>
+                                <div class="benefit-edit-fields">
+                                    <div class="form-row">
+                                        <div class="form-section" style="width: 80px;">
+                                            <label class="form-label">Icon</label>
+                                            <input type="text" id="input-benefit1-icon" class="form-input text-center" value="🚀" maxlength="2">
+                                        </div>
+                                        <div class="form-section flex-1">
+                                            <label class="form-label">Judul</label>
+                                            <input type="text" id="input-benefit1-title" class="form-input" placeholder="Checkout Lebih Cepat">
+                                        </div>
+                                    </div>
+                                    <div class="form-section">
+                                        <label class="form-label">Deskripsi</label>
+                                        <input type="text" id="input-benefit1-desc" class="form-input" placeholder="Data alamat otomatis terisi">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Benefit 2 -->
+                            <div class="benefit-edit-item">
+                                <div class="benefit-edit-header">
+                                    <span class="benefit-edit-number">2</span>
+                                    <span>Benefit Kedua</span>
+                                </div>
+                                <div class="benefit-edit-fields">
+                                    <div class="form-row">
+                                        <div class="form-section" style="width: 80px;">
+                                            <label class="form-label">Icon</label>
+                                            <input type="text" id="input-benefit2-icon" class="form-input text-center" value="📋" maxlength="2">
+                                        </div>
+                                        <div class="form-section flex-1">
+                                            <label class="form-label">Judul</label>
+                                            <input type="text" id="input-benefit2-title" class="form-input" placeholder="Riwayat Pesanan">
+                                        </div>
+                                    </div>
+                                    <div class="form-section">
+                                        <label class="form-label">Deskripsi</label>
+                                        <input type="text" id="input-benefit2-desc" class="form-input" placeholder="Lacak semua pesanan Anda">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Benefit 3 -->
+                            <div class="benefit-edit-item">
+                                <div class="benefit-edit-header">
+                                    <span class="benefit-edit-number">3</span>
+                                    <span>Benefit Ketiga</span>
+                                </div>
+                                <div class="benefit-edit-fields">
+                                    <div class="form-row">
+                                        <div class="form-section" style="width: 80px;">
+                                            <label class="form-label">Icon</label>
+                                            <input type="text" id="input-benefit3-icon" class="form-input text-center" value="💝" maxlength="2">
+                                        </div>
+                                        <div class="form-section flex-1">
+                                            <label class="form-label">Judul</label>
+                                            <input type="text" id="input-benefit3-title" class="form-input" placeholder="Promo Khusus">
+                                        </div>
+                                    </div>
+                                    <div class="form-section">
+                                        <label class="form-label">Deskripsi</label>
+                                        <input type="text" id="input-benefit3-desc" class="form-input" placeholder="Dapatkan penawaran spesial">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <label class="form-label">Preview Halaman</label>
+                            <div id="welcome-preview" class="welcome-preview">
+                                <!-- Preview rendered by JS -->
+                            </div>
                         </div>
 
                         <!-- Hours -->
