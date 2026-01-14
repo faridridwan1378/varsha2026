@@ -42,6 +42,25 @@ const Store = {
             saturdayClose: '20:00',
             sundayOpen: '09:00',
             sundayClose: '18:00'
+        },
+        banner: {
+            active: true,
+            badge: 'FRESH',
+            text: 'Buah segar langsung dari petani! 🌱',
+            icon: '🍎',
+            imageUrl: '',
+            color: 'green'
+        },
+        welcome: {
+            icon: '👋',
+            imageUrl: '',
+            title: 'Selamat Datang!',
+            subtitle: 'Masuk atau daftar untuk menikmati kemudahan berbelanja',
+            benefits: [
+                { icon: '🚀', title: 'Checkout Lebih Cepat', desc: 'Data alamat otomatis terisi' },
+                { icon: '📋', title: 'Riwayat Pesanan', desc: 'Lacak semua pesanan Anda' },
+                { icon: '💝', title: 'Promo Khusus', desc: 'Dapatkan penawaran spesial' }
+            ]
         }
     },
 
@@ -806,6 +825,69 @@ function loadProfileForm() {
     document.getElementById('input-saturday-close').value = Store.profile.hours.saturdayClose;
     document.getElementById('input-sunday-open').value = Store.profile.hours.sundayOpen;
     document.getElementById('input-sunday-close').value = Store.profile.hours.sundayClose;
+    
+    // Load banner settings
+    const banner = Store.profile.banner || { active: true, badge: 'FRESH', text: 'Buah segar langsung dari petani! 🌱', icon: '🍎', imageUrl: '', color: 'green' };
+    document.getElementById('input-banner-active').checked = banner.active !== false;
+    document.getElementById('input-banner-badge').value = banner.badge || 'FRESH';
+    document.getElementById('input-banner-text').value = banner.text || '';
+    document.getElementById('input-banner-icon').value = banner.icon || '🍎';
+    document.getElementById('input-banner-image').value = banner.imageUrl || '';
+    document.getElementById('input-banner-color').value = banner.color || 'green';
+    
+    // Update banner icon preview
+    updateBannerIconPreview();
+    
+    // Update color picker selection
+    document.querySelectorAll('.color-option').forEach(opt => {
+        opt.classList.remove('active');
+        if (opt.dataset.color === banner.color) {
+            opt.classList.add('active');
+        }
+    });
+    
+    // Update banner preview
+    updateBannerPreview();
+    
+    // Render emoji picker for banner
+    renderBannerEmojiPicker();
+    
+    // Load welcome settings
+    const welcome = Store.profile.welcome || {
+        icon: '👋',
+        imageUrl: '',
+        title: 'Selamat Datang!',
+        subtitle: 'Masuk atau daftar untuk menikmati kemudahan berbelanja',
+        benefits: [
+            { icon: '🚀', title: 'Checkout Lebih Cepat', desc: 'Data alamat otomatis terisi' },
+            { icon: '📋', title: 'Riwayat Pesanan', desc: 'Lacak semua pesanan Anda' },
+            { icon: '💝', title: 'Promo Khusus', desc: 'Dapatkan penawaran spesial' }
+        ]
+    };
+    
+    document.getElementById('input-welcome-icon').value = welcome.icon || '👋';
+    document.getElementById('input-welcome-image').value = welcome.imageUrl || '';
+    document.getElementById('input-welcome-title').value = welcome.title || 'Selamat Datang!';
+    document.getElementById('input-welcome-subtitle').value = welcome.subtitle || '';
+    
+    // Load benefits
+    if (welcome.benefits && welcome.benefits.length >= 3) {
+        document.getElementById('input-benefit1-icon').value = welcome.benefits[0].icon || '🚀';
+        document.getElementById('input-benefit1-title').value = welcome.benefits[0].title || '';
+        document.getElementById('input-benefit1-desc').value = welcome.benefits[0].desc || '';
+        
+        document.getElementById('input-benefit2-icon').value = welcome.benefits[1].icon || '📋';
+        document.getElementById('input-benefit2-title').value = welcome.benefits[1].title || '';
+        document.getElementById('input-benefit2-desc').value = welcome.benefits[1].desc || '';
+        
+        document.getElementById('input-benefit3-icon').value = welcome.benefits[2].icon || '💝';
+        document.getElementById('input-benefit3-title').value = welcome.benefits[2].title || '';
+        document.getElementById('input-benefit3-desc').value = welcome.benefits[2].desc || '';
+    }
+    
+    updateWelcomeIconPreview();
+    updateWelcomePreview();
+    renderWelcomeEmojiPicker();
 }
 
 function saveStoreProfile() {
@@ -844,6 +926,37 @@ function saveStoreProfile() {
             saturdayClose: document.getElementById('input-saturday-close').value,
             sundayOpen: document.getElementById('input-sunday-open').value,
             sundayClose: document.getElementById('input-sunday-close').value
+        },
+        banner: {
+            active: document.getElementById('input-banner-active').checked,
+            badge: document.getElementById('input-banner-badge').value.trim() || 'FRESH',
+            text: document.getElementById('input-banner-text').value.trim(),
+            icon: document.getElementById('input-banner-icon').value || '🍎',
+            imageUrl: document.getElementById('input-banner-image').value.trim(),
+            color: document.getElementById('input-banner-color').value || 'green'
+        },
+        welcome: {
+            icon: document.getElementById('input-welcome-icon').value || '👋',
+            imageUrl: document.getElementById('input-welcome-image').value.trim(),
+            title: document.getElementById('input-welcome-title').value.trim() || 'Selamat Datang!',
+            subtitle: document.getElementById('input-welcome-subtitle').value.trim(),
+            benefits: [
+                {
+                    icon: document.getElementById('input-benefit1-icon').value || '🚀',
+                    title: document.getElementById('input-benefit1-title').value.trim() || 'Checkout Lebih Cepat',
+                    desc: document.getElementById('input-benefit1-desc').value.trim() || 'Data alamat otomatis terisi'
+                },
+                {
+                    icon: document.getElementById('input-benefit2-icon').value || '📋',
+                    title: document.getElementById('input-benefit2-title').value.trim() || 'Riwayat Pesanan',
+                    desc: document.getElementById('input-benefit2-desc').value.trim() || 'Lacak semua pesanan Anda'
+                },
+                {
+                    icon: document.getElementById('input-benefit3-icon').value || '💝',
+                    title: document.getElementById('input-benefit3-title').value.trim() || 'Promo Khusus',
+                    desc: document.getElementById('input-benefit3-desc').value.trim() || 'Dapatkan penawaran spesial'
+                }
+            ]
         }
     };
     
@@ -882,6 +995,42 @@ function applyStoreProfile() {
     
     // Document title
     document.title = `${Store.profile.name} ${Store.profile.logo}`;
+    
+    // Apply Hero Banner
+    applyHeroBanner();
+    
+    // Apply Welcome Page
+    applyWelcomePage();
+}
+
+function applyHeroBanner() {
+    const bannerContainer = document.getElementById('promo-banner');
+    if (!bannerContainer) return;
+    
+    const banner = Store.profile.banner || { active: true, badge: 'FRESH', text: 'Buah segar langsung dari petani! 🌱', icon: '🍎', imageUrl: '', color: 'green' };
+    
+    // Hide banner if not active
+    if (!banner.active) {
+        bannerContainer.style.display = 'none';
+        return;
+    }
+    
+    bannerContainer.style.display = 'flex';
+    
+    // Apply color class
+    bannerContainer.className = 'promo-banner color-' + (banner.color || 'green');
+    
+    // Update content
+    bannerContainer.innerHTML = `
+        <div class="promo-content">
+            <span class="promo-badge">${banner.badge || 'FRESH'}</span>
+            <p class="promo-text">${banner.text || 'Buah segar langsung dari petani! 🌱'}</p>
+        </div>
+        ${banner.imageUrl 
+            ? `<img src="${banner.imageUrl}" alt="Banner" class="promo-icon-img" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.outerHTML='<span class=\\'promo-icon\\'>${banner.icon || '🍎'}</span>'">`
+            : `<span class="promo-icon">${banner.icon || '🍎'}</span>`
+        }
+    `;
 }
 
 function toggleLogoPicker() {
@@ -900,6 +1049,258 @@ function updateLogoPreview() {
             : `<span class="text-4xl">${logoEmoji}</span>`;
     }
 }
+
+// ==================== BANNER MANAGEMENT ====================
+
+function renderBannerEmojiPicker() {
+    const bannerPicker = document.getElementById('emoji-picker-banner');
+    if (!bannerPicker) return;
+    
+    const bannerEmojis = ['🍎', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🫐', '🍈', '🍒', '🍑', '🥭', '🍍', '🥥', '🥝', '🍐', '🍏', '🥑', '🍯', '🧃', '🥤', '🍹', '🌴', '🌱', '🔥', '⭐', '💯', '🎉', '🎁', '💝', '🛒', '🏪'];
+    
+    bannerPicker.innerHTML = bannerEmojis.map(emoji => `
+        <div class="emoji-option" onclick="selectBannerIcon('${emoji}', this)" data-emoji="${emoji}">${emoji}</div>
+    `).join('');
+}
+
+function toggleBannerIconPicker() {
+    const picker = document.getElementById('emoji-picker-banner');
+    picker?.classList.toggle('hidden');
+}
+
+function selectBannerIcon(emoji, element) {
+    const picker = element.closest('.emoji-picker');
+    
+    picker.querySelectorAll('.emoji-option').forEach(el => el.classList.remove('selected'));
+    element.classList.add('selected');
+    
+    document.getElementById('input-banner-icon').value = emoji;
+    document.getElementById('input-banner-image').value = '';
+    updateBannerIconPreview();
+    updateBannerPreview();
+    
+    picker.classList.add('hidden');
+}
+
+function updateBannerIconPreview() {
+    const preview = document.getElementById('banner-icon-preview');
+    const imageUrl = document.getElementById('input-banner-image')?.value.trim();
+    const emoji = document.getElementById('input-banner-icon')?.value || '🍎';
+    
+    if (preview) {
+        preview.innerHTML = imageUrl 
+            ? `<img src="${imageUrl}" alt="Banner" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-3xl\\'>${emoji}</span>'">`
+            : `<span class="text-3xl">${emoji}</span>`;
+    }
+}
+
+function selectBannerColor(color, element) {
+    document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('active'));
+    element.classList.add('active');
+    document.getElementById('input-banner-color').value = color;
+    updateBannerPreview();
+}
+
+function updateBannerPreview() {
+    const preview = document.getElementById('banner-preview');
+    if (!preview) return;
+    
+    const badge = document.getElementById('input-banner-badge')?.value || 'FRESH';
+    const text = document.getElementById('input-banner-text')?.value || 'Buah segar langsung dari petani! 🌱';
+    const icon = document.getElementById('input-banner-icon')?.value || '🍎';
+    const imageUrl = document.getElementById('input-banner-image')?.value.trim();
+    const color = document.getElementById('input-banner-color')?.value || 'green';
+    
+    // Update color class
+    preview.className = 'promo-banner color-' + color;
+    preview.style.margin = '0';
+    
+    // Update content
+    preview.innerHTML = `
+        <div class="promo-content">
+            <span class="promo-badge">${badge}</span>
+            <p class="promo-text">${text}</p>
+        </div>
+        ${imageUrl 
+            ? `<img src="${imageUrl}" alt="Banner" class="promo-icon-img" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.outerHTML='<span class=\\'promo-icon\\'>${icon}</span>'">`
+            : `<span class="promo-icon">${icon}</span>`
+        }
+    `;
+}
+
+// Add event listeners for banner inputs
+document.getElementById('input-banner-badge')?.addEventListener('input', updateBannerPreview);
+document.getElementById('input-banner-text')?.addEventListener('input', updateBannerPreview);
+document.getElementById('input-banner-image')?.addEventListener('input', function() {
+    updateBannerIconPreview();
+    updateBannerPreview();
+});
+
+// ==================== WELCOME PAGE MANAGEMENT ====================
+
+function renderWelcomeEmojiPicker() {
+    const welcomePicker = document.getElementById('emoji-picker-welcome');
+    if (!welcomePicker) return;
+    
+    const welcomeEmojis = ['👋', '🎉', '🌟', '✨', '💫', '🎊', '🙋', '🙋‍♀️', '🙋‍♂️', '👏', '🤝', '💖', '❤️', '🧡', '💛', '💚', '💙', '💜', '🤍', '🖤', '😊', '😃', '🥳', '🎁', '🛒', '🛍️', '🏪', '🍎', '🍊', '🥭', '🍇', '🍓'];
+    
+    welcomePicker.innerHTML = welcomeEmojis.map(emoji => `
+        <div class="emoji-option" onclick="selectWelcomeIcon('${emoji}', this)" data-emoji="${emoji}">${emoji}</div>
+    `).join('');
+}
+
+function toggleWelcomeIconPicker() {
+    const picker = document.getElementById('emoji-picker-welcome');
+    picker?.classList.toggle('hidden');
+}
+
+function selectWelcomeIcon(emoji, element) {
+    const picker = element.closest('.emoji-picker');
+    
+    picker.querySelectorAll('.emoji-option').forEach(el => el.classList.remove('selected'));
+    element.classList.add('selected');
+    
+    document.getElementById('input-welcome-icon').value = emoji;
+    document.getElementById('input-welcome-image').value = '';
+    updateWelcomeIconPreview();
+    updateWelcomePreview();
+    
+    picker.classList.add('hidden');
+}
+
+function updateWelcomeIconPreview() {
+    const preview = document.getElementById('welcome-icon-preview');
+    const imageUrl = document.getElementById('input-welcome-image')?.value.trim();
+    const emoji = document.getElementById('input-welcome-icon')?.value || '👋';
+    
+    if (preview) {
+        preview.innerHTML = imageUrl 
+            ? `<img src="${imageUrl}" alt="Welcome" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-3xl\\'>${emoji}</span>'">`
+            : `<span class="text-3xl">${emoji}</span>`;
+    }
+}
+
+function updateWelcomePreview() {
+    const preview = document.getElementById('welcome-preview');
+    if (!preview) return;
+    
+    const icon = document.getElementById('input-welcome-icon')?.value || '👋';
+    const imageUrl = document.getElementById('input-welcome-image')?.value.trim();
+    const title = document.getElementById('input-welcome-title')?.value || 'Selamat Datang!';
+    const subtitle = document.getElementById('input-welcome-subtitle')?.value || 'Masuk atau daftar untuk menikmati kemudahan berbelanja';
+    
+    const benefit1Icon = document.getElementById('input-benefit1-icon')?.value || '🚀';
+    const benefit1Title = document.getElementById('input-benefit1-title')?.value || 'Checkout Lebih Cepat';
+    const benefit1Desc = document.getElementById('input-benefit1-desc')?.value || 'Data alamat otomatis terisi';
+    
+    const benefit2Icon = document.getElementById('input-benefit2-icon')?.value || '📋';
+    const benefit2Title = document.getElementById('input-benefit2-title')?.value || 'Riwayat Pesanan';
+    const benefit2Desc = document.getElementById('input-benefit2-desc')?.value || 'Lacak semua pesanan Anda';
+    
+    const benefit3Icon = document.getElementById('input-benefit3-icon')?.value || '💝';
+    const benefit3Title = document.getElementById('input-benefit3-title')?.value || 'Promo Khusus';
+    const benefit3Desc = document.getElementById('input-benefit3-desc')?.value || 'Dapatkan penawaran spesial';
+    
+    preview.innerHTML = `
+        <div class="welcome-preview-icon">
+            ${imageUrl 
+                ? `<img src="${imageUrl}" alt="Welcome" style="width:48px;height:48px;object-fit:cover;border-radius:12px;" onerror="this.outerHTML='${icon}'">`
+                : icon
+            }
+        </div>
+        <h4 class="welcome-preview-title">${title}</h4>
+        <p class="welcome-preview-subtitle">${subtitle}</p>
+        <div class="welcome-preview-benefits">
+            <div class="welcome-preview-benefit">
+                <span class="welcome-preview-benefit-icon">${benefit1Icon}</span>
+                <div class="welcome-preview-benefit-text">
+                    <h5>${benefit1Title}</h5>
+                    <p>${benefit1Desc}</p>
+                </div>
+            </div>
+            <div class="welcome-preview-benefit">
+                <span class="welcome-preview-benefit-icon">${benefit2Icon}</span>
+                <div class="welcome-preview-benefit-text">
+                    <h5>${benefit2Title}</h5>
+                    <p>${benefit2Desc}</p>
+                </div>
+            </div>
+            <div class="welcome-preview-benefit">
+                <span class="welcome-preview-benefit-icon">${benefit3Icon}</span>
+                <div class="welcome-preview-benefit-text">
+                    <h5>${benefit3Title}</h5>
+                    <p>${benefit3Desc}</p>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function applyWelcomePage() {
+    const welcome = Store.profile.welcome || {
+        icon: '👋',
+        imageUrl: '',
+        title: 'Selamat Datang!',
+        subtitle: 'Masuk atau daftar untuk menikmati kemudahan berbelanja',
+        benefits: [
+            { icon: '🚀', title: 'Checkout Lebih Cepat', desc: 'Data alamat otomatis terisi' },
+            { icon: '📋', title: 'Riwayat Pesanan', desc: 'Lacak semua pesanan Anda' },
+            { icon: '💝', title: 'Promo Khusus', desc: 'Dapatkan penawaran spesial' }
+        ]
+    };
+    
+    // Update welcome icon
+    const iconEl = document.getElementById('welcome-display-icon');
+    if (iconEl) {
+        iconEl.innerHTML = welcome.imageUrl 
+            ? `<img src="${welcome.imageUrl}" alt="Welcome" style="width:64px;height:64px;object-fit:cover;border-radius:16px;" onerror="this.outerHTML='${welcome.icon}'">`
+            : welcome.icon;
+    }
+    
+    // Update title
+    const titleEl = document.getElementById('welcome-display-title');
+    if (titleEl) {
+        titleEl.textContent = welcome.title || 'Selamat Datang!';
+    }
+    
+    // Update subtitle
+    const subtitleEl = document.getElementById('welcome-display-subtitle');
+    if (subtitleEl) {
+        subtitleEl.textContent = welcome.subtitle || 'Masuk atau daftar untuk menikmati kemudahan berbelanja';
+    }
+    
+    // Update benefits
+    const benefitsEl = document.getElementById('welcome-benefits-display');
+    if (benefitsEl && welcome.benefits && welcome.benefits.length >= 3) {
+        benefitsEl.innerHTML = welcome.benefits.map(benefit => `
+            <div class="benefit-item">
+                <span class="benefit-icon">${benefit.icon}</span>
+                <div class="benefit-content">
+                    <h4>${benefit.title}</h4>
+                    <p>${benefit.desc}</p>
+                </div>
+            </div>
+        `).join('');
+    }
+}
+
+// Add event listeners for welcome inputs
+document.addEventListener('DOMContentLoaded', function() {
+    // Welcome page inputs
+    document.getElementById('input-welcome-title')?.addEventListener('input', updateWelcomePreview);
+    document.getElementById('input-welcome-subtitle')?.addEventListener('input', updateWelcomePreview);
+    document.getElementById('input-welcome-image')?.addEventListener('input', function() {
+        updateWelcomeIconPreview();
+        updateWelcomePreview();
+    });
+    
+    // Benefit inputs
+    ['1', '2', '3'].forEach(num => {
+        document.getElementById(`input-benefit${num}-icon`)?.addEventListener('input', updateWelcomePreview);
+        document.getElementById(`input-benefit${num}-title`)?.addEventListener('input', updateWelcomePreview);
+        document.getElementById(`input-benefit${num}-desc`)?.addEventListener('input', updateWelcomePreview);
+    });
+});
 
 // ==================== PRODUCT MANAGEMENT ====================
 
